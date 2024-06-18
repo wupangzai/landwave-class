@@ -93,6 +93,7 @@ export default {
               SA: this.personMap.find((person) => person.name === item['助教']) ? this.personMap.find((person) => person.name === item['助教']).EName : '',
               todaySA: this.personMap.find((person) => person.name === item['助教']) ? this.personMap.find((person) => person.name === item['助教']).EName : '',
               studentClassPlace: item['上课校区'],
+              studentServePlace: item['学生服务校区']
           }
       })
     },
@@ -165,7 +166,7 @@ exportToExcel() {
 
 
       sortedClassList.forEach((item, index) => {
-        const ps = item.SA ? '' : '非本校区学生'
+        const ps = item.SA ? '' : '非本校区学生--' + item.studentServePlace
         data.push([item.time, item.subject, item.teacher, item.student,item.SA, item.todaySA, item.studentClassPlace, ps])
       })
       this.count = data.length - 1
@@ -183,7 +184,7 @@ exportToExcel() {
         { wch: 15 }, // 第二列宽75个字符宽度单位
         { wch: 15 }, // 第二列宽75个字符宽度单位
         { wch: 15 }, // 第二列宽75个字符宽度单位
-        { wch: 15 }, // 第二列宽75个字符宽度单位
+        { wch: 30 }, // 第二列宽75个字符宽度单位
       ];
 
     const keys = Object.keys(worksheet)   
