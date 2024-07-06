@@ -4,23 +4,26 @@
       <el-input
         placeholder="MetaBase Input(a month)"
         v-model="metaBaseInput"
+        class="wage-input"
       ></el-input>
       <el-input
         style="margin-top: 30px"
         placeholder="CA"
         v-model="CAName"
+        class="wage-input"
       ></el-input>
       <el-input
         style="margin-top: 30px"
         placeholder="职级"
         v-model="level"
+        class="wage-input"
       ></el-input>
       <el-button @click="clickFn" style="margin-top: 40px">handler</el-button>
     </div>
     <div class="class-member">
       <el-card class="box-card">
         <div slot="header" class="clearfix">
-          <span>自己的班课成员</span>
+          <span>自己的班课娃娃们</span>
           <el-button style="float: right; padding: 3px 0" type="text"
             >Disabled</el-button
           >
@@ -41,7 +44,37 @@
         </div>
       </el-card>
     </div>
-    <div class="member-list">456</div>
+    <div class="member-list">
+      <el-card class="box-card">
+        <div slot="header" class="clearfix">
+          <span>奴役慰劳费</span>
+          <el-button style="float: right; padding: 3px 0" type="text"
+            >Disabled</el-button
+          >
+        </div>
+        <div>
+          <div>
+            VIP辅练总时长： <el-tag>{{ VIPTotalHours }}</el-tag>
+          </div>
+          <div>
+            VIP课消统计：
+            <el-tag class="des-tag" type="danger">{{
+              1 * VIPTotalHours * LevelMap[level]
+            }}</el-tag>
+          </div>
+
+          <div style="margin-top: 20px">
+            班课辅练总时长： <el-tag>{{ classTotalHours }}</el-tag>
+          </div>
+          <div>
+            班级课消统计：
+            <el-tag class="des-tag" type="danger">{{
+              0.5 * classTotalHours * LevelMap[level]
+            }}</el-tag>
+          </div>
+        </div>
+      </el-card>
+    </div>
   </div>
 </template>
 
@@ -75,14 +108,16 @@ export default {
           ],
         },
       },
-      CAName: "吴彬",
-      level: "P1",
+      CAName: "",
+      level: "",
       LevelMap: {
         P1: 3,
         P2: 4,
         P3: 5,
       },
       validDataList: [],
+      VIPTotalHours: 0,
+      classTotalHours: 0,
     };
   },
   methods: {
@@ -128,6 +163,7 @@ export default {
                 classNo: item.stuOrClass,
                 pricePay: 0.5 * item.duringHour * this.LevelMap[this.level],
               });
+              this.classTotalHours += item.duringHour;
             });
           } else {
             list.push({
@@ -137,6 +173,7 @@ export default {
               classNo: "",
               pricePay: 1 * item.duringHour * this.LevelMap[this.level],
             });
+            this.VIPTotalHours += item.duringHour;
           }
         });
       return list;
@@ -176,14 +213,14 @@ export default {
       const worksheet = XLSX.utils.aoa_to_sheet(data);
 
       worksheet["!cols"] = [
-        { wch: 20 }, // 第一列宽50个字符宽度单位
-        { wch: 30 }, // 第二列宽75个字符宽度单位
+        { wch: 15 }, // 第一列宽50个字符宽度单位
+        { wch: 20 }, // 第二列宽75个字符宽度单位
         { wch: 15 }, // 第三列宽100个字符宽度单位
         { wch: 15 }, // 第二列宽75个字符宽度单位
+        { wch: 25 }, // 第二列宽75个字符宽度单位
         { wch: 15 }, // 第二列宽75个字符宽度单位
         { wch: 15 }, // 第二列宽75个字符宽度单位
-        { wch: 15 }, // 第二列宽75个字符宽度单位
-        { wch: 30 }, // 第二列宽75个字符宽度单位
+        { wch: 10 }, // 第二列宽75个字符宽度单位
       ];
 
       const keys = Object.keys(worksheet);
@@ -195,10 +232,20 @@ export default {
         }
       });
 
-      const headers = ["A1", "B1", "C1", "D1", "E1", "F1", "G1", "H1"]; // 设置表头颜色
+      const headers = ["A1", "B1", "C1", "D1", "E1", "F1", "G1", "H1", "I1"]; // 设置表头颜色
       headers.forEach((header) => {
         worksheet[header].s.fill = {
-          fgColor: { rgb: "C6E0B4" },
+          fgColor: { rgb: "4BACC6" },
+        };
+        worksheet[header].s.alignment = {
+          horizontal: "center",
+          vertical: "center",
+        };
+        worksheet[header].s.border = {
+          top: { style: "thin" },
+          left: { style: "thin" },
+          bottom: { style: "thin" },
+          right: { style: "thin" },
         };
       });
 
@@ -249,7 +296,7 @@ export default {
       const blobUrl = window.URL.createObjectURL(dataBlob);
 
       // 使用filesaver.js保存文件
-      saveAs(dataBlob, "Excel-课表转换.xlsx");
+      saveAs(dataBlob, "Excel-课消统计.xlsx");
 
       // 清理
       window.URL.revokeObjectURL(blobUrl);
@@ -277,6 +324,14 @@ export default {
 
   .class-member {
     height: 100%;
+  }
+  .wage-input {
+    display: block;
+    width: 350px;
+  }
+  .des-tag {
+    margin-left: 16px;
+    margin-top: 5px;
   }
 }
 </style>

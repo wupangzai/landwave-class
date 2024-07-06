@@ -3,11 +3,21 @@
     <div>
       <input id="message" v-model="classList" />
       <el-button type="success" @click="handler">下载课程表</el-button>
+      <el-tag type="danger" style="margin-left: 10px"
+        >不用再去MetaBase下载课表了呢，亲</el-tag
+      >
+
       <el-link type="danger" disabled class="info">叠个甲先，仅供参考</el-link>
 
       <div class="wage">
-        <el-button type="primary" @click="toWagePage"> 切换至绩效 </el-button>
+        <el-button type="primary" @click="toWagePage" disabled>
+          绩效统计（disabled now）
+        </el-button>
       </div>
+      <div class="daily-class" style="margin-top: 30px">
+        <el-button type="danger" @click="toDailyPage"> 日常课表 </el-button>
+      </div>
+      <h1>伟大的性格，无需多言</h1>
     </div>
 
     <el-card class="box-card" v-if="tipsVisible">
@@ -73,6 +83,7 @@
 import XLSX from "xlsx-js-style";
 import { saveAs } from "file-saver";
 import _ from "lodash";
+import axios from "axios";
 
 export default {
   name: "App",
@@ -112,6 +123,7 @@ export default {
       tipsVisible: false,
       renderList: [],
       moreThanTwoList: [],
+      jsonData: "",
     };
   },
   methods: {
@@ -318,6 +330,22 @@ export default {
     toWagePage() {
       this.$router.push("./wage");
     },
+    toDailyPage() {
+      this.$router.push("./daily-class");
+    },
+  },
+  async created() {
+    axios
+      .get(
+        "/class/json?parameters=%5B%7B%22type%22%3A%22category%22%2C%22value%22%3A%5B%22%E5%8D%8A%E6%B5%B7%E4%BA%BA%E5%B9%BF%22%5D%2C%22id%22%3A%22e7ab001d-adfb-44aa-7cd3-96ee5f8d0dc2%22%2C%22target%22%3A%5B%22variable%22%2C%5B%22template-tag%22%2C%22dept%22%5D%5D%7D%2C%7B%22type%22%3A%22date%2Fall-options%22%2C%22value%22%3A%22next1days%22%2C%22id%22%3A%22953e6c0e-7467-721c-8065-fa3451526c25%22%2C%22target%22%3A%5B%22dimension%22%2C%5B%22template-tag%22%2C%22date%22%5D%5D%7D%2C%7B%22type%22%3A%22category%22%2C%22value%22%3Anull%2C%22id%22%3A%22627547e3-e078-8cd7-1c44-0038eba685e3%22%2C%22target%22%3A%5B%22variable%22%2C%5B%22template-tag%22%2C%22stuName%22%5D%5D%7D%5D&format_rows=true"
+      )
+      .then((response) => {
+        this.classList = JSON.stringify(response.data);
+        this.$message.success("自动获取明日课表成功~");
+      })
+      .catch((error) => {
+        console.error(error);
+      });
   },
   computed: {
     moreThanTwoClassStudentList() {
@@ -333,7 +361,7 @@ export default {
 #class-home {
   width: 100%;
   height: 100%;
-  overflow: auto;
+  /* overflow: auto; */
   display: flex;
 }
 #message {
