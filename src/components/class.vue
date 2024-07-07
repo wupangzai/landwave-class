@@ -116,6 +116,14 @@ export default {
           name: "王淑贤",
           EName: "Yilia",
         },
+        {
+          name: "吴凡",
+          EName: "吴凡",
+        },
+        {
+          name: "许鹏",
+          EName: "许鹏",
+        },
       ],
       count: 0,
       studentNotInRenGuang: 0,

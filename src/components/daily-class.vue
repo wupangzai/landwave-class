@@ -28,6 +28,22 @@
       <el-button type="primary" style="margin-top: 20px" @click="clickFn">
         获取上课提醒
       </el-button>
+      <el-tag type="warning" style="margin-left: 0px; display: block"
+        >不带教室，破系统没有数据,神仙都做不出来👆</el-tag
+      >
+
+      <div style="margin-right: 20px; width: 280px; margin-top: 50px">
+        <el-tag type="danger">带教室的 Pro Test Version👇 出错了别找我</el-tag>
+        <el-upload
+          class="upload-demo"
+          drag
+          action="https://jsonplaceholder.typicode.com/posts/"
+          :on-error="upload"
+        >
+          <i class="el-icon-upload"></i>
+          <div class="el-upload__text">将文件拖到此处，或<em>点击上传</em></div>
+        </el-upload>
+      </div>
     </div>
     <div class="copy-area">
       <el-card class="box-card-daily">
@@ -53,9 +69,11 @@
                 <div>☀【明日课程提醒】</div>
                 <div>上课时间：{{ item.time }}</div>
                 <div>上课科目：{{ item.subject }}@{{ item.teacher }}</div>
-                <div>授课方式：线下</div>
-                <div>上课地址：半海人广校区（汉口路300号解放大厦4楼）</div>
-                <div>上课教室：</div>
+                <div>授课方式：{{ item.isOnline ? "线上" : "线下" }}</div>
+                <div v-if="!item.isOnline">
+                  上课地址：半海人广校区（汉口路300号解放大厦4楼）
+                </div>
+                <div v-if="!item.isOnline">上课教室：{{ item.classroom }}</div>
                 <div>以上是明天的课程提醒，请查收哈🌹</div>
               </div>
             </el-card>
@@ -67,7 +85,10 @@
 </template>
 
 <script>
+const XLSX = require("xlsx-js-style");
 import axios from "axios";
+import _ from "lodash";
+import moment from "moment";
 export default {
   name: "DailyClass",
   data() {
@@ -86,6 +107,14 @@ export default {
         {
           value: "刘维倩",
           label: "刘维倩",
+        },
+        {
+          value: "董洁",
+          label: "董洁",
+        },
+        {
+          value: "王南飞",
+          label: "王南飞",
         },
       ],
       classMember: {
@@ -109,6 +138,7 @@ export default {
         },
       },
       renderList: [],
+      roomList: [],
     };
   },
   methods: {
@@ -145,7 +175,13 @@ export default {
       }, []);
     },
     async copyToClipBoard(item) {
-      const text = `☀【明日课程提醒】\n上课时间：${item.time}\n上课科目：${item.subject}@${item.teacher}\n授课方式：线下\n上课地址：半海人广校区（汉口路300号解放大厦4楼）\n上课教室：\n以上是明天的课程提醒，请查收哈`;
+      const text = `☀【明日课程提醒】\n上课时间：${item.time}\n上课科目：${
+        item.subject
+      }@${item.teacher}\n授课方式：${
+        item.isOnline ? "线上" : "线下"
+      }\n上课地址：半海人广校区（汉口路300号解放大厦4楼）\n上课教室：${
+        item.classroom
+      }\n以上是明天的课程提醒，请查收哈`;
       // await navigator.clipboard.writeText(text);
       function copyToClipboard(textToCopy) {
         // navigator clipboard 需要https等安全上下文
@@ -173,6 +209,88 @@ export default {
       }
       copyToClipboard(text);
       this.$message.success("复制成功");
+    },
+
+    upload(e, file) {
+      const reader = new FileReader();
+      reader.readAsArrayBuffer(file.raw);
+      reader.onload = (event) => {
+        const data = new Uint8Array(event.target.result);
+        const workbook = XLSX.read(data, { type: "array" });
+
+        // 根据名称获取指定工作表
+        const sheetName = moment().add(1, "days").format("YYYY.M.D");
+        // console.log("workbook.Sheets", workbook.Sheets);
+        const worksheet = workbook.Sheets[sheetName];
+
+        const jsonData = XLSX.utils.sheet_to_json(worksheet);
+        console.log("jsonData", jsonData);
+        this.roomList = _.cloneDeep(jsonData);
+
+        // 处理 VIP
+        for (let i = 5; i < jsonData.length; i++) {
+          const ObjectKeysList = Object.keys(jsonData[i]);
+          if (!ObjectKeysList.includes("半海人广校区教室占用表")) {
+            this.roomList[i]["半海人广校区教室占用表"] =
+              this.roomList[i - 1]["半海人广校区教室占用表"];
+          }
+        }
+
+        // 处理教室
+        for (let i = 4; i < jsonData.length; i++) {
+          const ObjectKeysList = Object.keys(jsonData[i]);
+          if (!ObjectKeysList.includes("__EMPTY_6")) {
+            this.roomList[i]["__EMPTY_6"] = this.roomList[i - 1]["__EMPTY_6"];
+          }
+        }
+        console.log("translate roomList", this.roomList);
+
+        // clickFn
+        const dataAfterParase = JSON.parse(this.metaBaseInput);
+        const listAfterFilterByCA = dataAfterParase.filter((item) => {
+          return item["助教"] === this.CAName;
+        });
+        // console.log(listAfterFilterByCA);
+        const dataAfterSorted = this.sortByPropertyOrder(
+          listAfterFilterByCA,
+          "学生/班级"
+        );
+
+        this.renderList = dataAfterSorted.map((item) => {
+          let classroom;
+          let isOnline;
+          // console.log("roomlist", this.roomList);
+
+          this.roomList.forEach((eItem, index) => {
+            // VIP time name
+            const isVIPRoom =
+              `${item.start.slice(-5)}-${item.end.slice(-5)}` ===
+                eItem["__EMPTY"] && item["学生/班级"] === eItem["__EMPTY_3"];
+
+            // Class time name
+            const isClassRoom =
+              `${item.start.slice(-5)}-${item.end.slice(-5)}` ===
+                eItem["__EMPTY_7"] && eItem["__EMPTY_10"] === item["学生/班级"];
+            if (isVIPRoom) {
+              classroom = eItem["半海人广校区教室占用表"];
+            } else if (isClassRoom) {
+              classroom = eItem["__EMPTY_6"];
+            }
+            if (isVIPRoom && classroom === "网课") {
+              isOnline = true;
+            }
+          });
+          return {
+            time: `${item.start.slice(-5)}-${item.end.slice(-5)}`,
+            subject: item["课程"],
+            stuOrClass: item["学生/班级"],
+            teacher: item["教师"],
+            classroom,
+            isOnline,
+          };
+        });
+        console.log(this.renderList);
+      };
     },
   },
   async created() {
@@ -237,5 +355,11 @@ export default {
 .copy-area {
   margin-left: 80px;
   flex: 1;
+}
+
+.upload-demo {
+  width: 250px;
+  // display: inline-block;
+  margin-right: 10px;
 }
 </style>
