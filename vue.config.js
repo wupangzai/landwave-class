@@ -11,6 +11,13 @@ module.exports = defineConfig({
           "^/class": "", // 重写路径
         },
       },
+      "/crm": {
+        target: "https://crm-api.landwave.cn/api/v1", // 目标服务器地址
+        changeOrigin: true, // 是否改变源地址
+        pathRewrite: {
+          "^/crm": "", // 重写路径
+        },
+      },
     },
   },
 });

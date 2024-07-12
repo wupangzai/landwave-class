@@ -17,6 +17,11 @@
       <div class="daily-class" style="margin-top: 30px">
         <el-button type="danger" @click="toDailyPage"> 日常课表 </el-button>
       </div>
+      <div class="daily-class" style="margin-top: 30px">
+        <el-button type="info" @click="toLessonRecordPage">
+          课程反馈发送记录
+        </el-button>
+      </div>
       <h1>伟大的性格，无需多言</h1>
     </div>
 
@@ -340,6 +345,9 @@ export default {
     },
     toDailyPage() {
       this.$router.push("./daily-class");
+    },
+    toLessonRecordPage() {
+      this.$router.push("./lesson-record");
     },
   },
   async created() {

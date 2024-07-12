@@ -177,10 +177,10 @@ export default {
     async copyToClipBoard(item) {
       const text = `☀【明日课程提醒】\n上课时间：${item.time}\n上课科目：${
         item.subject
-      }@${item.teacher}\n授课方式：${
-        item.isOnline ? "线上" : "线下"
-      }\n上课地址：半海人广校区（汉口路300号解放大厦4楼）\n上课教室：${
-        item.classroom
+      }@${item.teacher}\n授课方式：${item.isOnline ? "线上" : "线下"}\n${
+        item.isOnline ? "" : "上课地址：半海人广校区（汉口路300号解放大厦4楼）"
+      }\n${
+        item.isOnline ? "" : `上课教室：${item.classroom}`
       }\n以上是明天的课程提醒，请查收哈`;
       // await navigator.clipboard.writeText(text);
       function copyToClipboard(textToCopy) {
