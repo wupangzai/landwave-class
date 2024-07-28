@@ -206,10 +206,14 @@ export default {
   //   padding: 5px;
 
   /* height: 100vh; */
+  height: 95vh;
+  overflow-y: scroll;
+
   margin-left: -10px;
   display: flex;
   .box-card {
     width: 180px;
+    height: max-content;
   }
 }
 </style>
