@@ -54,7 +54,7 @@
     <div class="class-member">
       <el-card class="box-card box-card-container">
         <div slot="header" class="clearfix">
-          <span>自己的班课娃娃们</span>
+          <span>自己的班课学生</span>
           <el-button style="float: right; padding: 3px 0" type="text"
             >Disabled</el-button
           >
@@ -375,14 +375,15 @@ export default {
 #wage {
   width: 100%;
   display: flex;
+  padding: 10px;
 
   .class-member {
-    margin-left: 50px;
+    margin-left: 10px;
     flex: 1;
   }
 
   .member-list {
-    margin-left: 50px;
+    margin-left: 30px;
     flex: 1;
   }
 
@@ -391,7 +392,7 @@ export default {
   }
   .wage-input {
     display: block;
-    width: 350px;
+    width: 320px;
   }
   .des-tag {
     margin-left: 16px;
@@ -399,7 +400,7 @@ export default {
   }
   .box-card-container {
     height: 90vh;
-    overflow: auto;
+    overflow-y: auto;
   }
 }
 </style>
