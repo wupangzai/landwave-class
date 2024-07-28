@@ -2,7 +2,12 @@
   <div id="work-arrangement-current">
     <!-- <el-input v-model="weekdayArrange" placeholder="请输入内容"></el-input> -->
     <!-- <el-button @click="clickFn"> clickFn </el-button> -->
-    <el-card class="box-card" v-for="(day, index) in weekdayList" :key="index">
+    <el-card
+      class="box-card"
+      v-for="(day, index) in weekdayList"
+      :key="index"
+      :class="getBgcColor(day)"
+    >
       <div slot="header" class="clearfix">
         <span>{{ weekMap[index] }}</span>
         <el-button style="float: right; padding: 3px 0" type="text">{{
@@ -81,6 +86,7 @@ export default {
         5: "周六",
         6: "周日",
       },
+      today: "",
     };
   },
   methods: {
@@ -196,8 +202,13 @@ export default {
       await this.getData();
       this.handleData();
     },
+
+    getBgcColor(day) {
+      return this.today === day ? "today-color" : "";
+    },
   },
   async mounted() {
+    this.today = moment().format("YYYY-M-D");
     this.clickFn();
   },
 };
@@ -214,6 +225,9 @@ export default {
   display: flex;
   .box-card {
     width: 180px;
+  }
+  .today-color {
+    background-color: #fdf6ec;
   }
 }
 </style>
