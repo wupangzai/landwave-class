@@ -220,11 +220,13 @@ export default {
   margin-left: -10px;
 
   //   padding: 5px;
-
+  height: 95vh;
+  overflow-y: scroll;
   /* height: 100vh; */
   display: flex;
   .box-card {
     width: 180px;
+    height: max-content;
   }
   .today-color {
     background-color: #fdf6ec;
