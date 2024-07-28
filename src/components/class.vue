@@ -3,26 +3,30 @@
     <div>
       <input id="message" v-model="classList" />
       <el-button type="success" @click="handler">下载课程表</el-button>
-      <el-tag type="danger" style="margin-left: 10px"
-        >不用再去MetaBase下载课表了呢，亲</el-tag
-      >
+      <div>
+        <el-tag type="danger" style="margin-top: 10px"
+          >不用再去MetaBase下载课表了呢，亲</el-tag
+        >
 
-      <el-link type="danger" disabled class="info">叠个甲先，仅供参考</el-link>
+        <el-link type="danger" disabled class="info"
+          >叠个甲先，仅供参考</el-link
+        >
+      </div>
 
-      <div class="wage">
+      <!-- <div class="wage">
         <el-button type="primary" @click="toWagePage" disabled>
           绩效统计（disabled now）
         </el-button>
-      </div>
-      <div class="daily-class" style="margin-top: 30px">
+      </div> -->
+      <!-- <div class="daily-class" style="margin-top: 30px">
         <el-button type="danger" @click="toDailyPage"> 日常课表 </el-button>
-      </div>
-      <div class="daily-class" style="margin-top: 30px">
+      </div> -->
+      <!-- <div class="daily-class" style="margin-top: 30px">
         <el-button type="info" @click="toLessonRecordPage">
           课程反馈发送记录
         </el-button>
       </div>
-      <h1>伟大的性格，无需多言</h1>
+      <h1>伟大的性格，无需多言</h1> -->
     </div>
 
     <el-card class="box-card" v-if="tipsVisible">
@@ -379,6 +383,7 @@ export default {
   height: 100%;
   /* overflow: auto; */
   display: flex;
+  padding: 10px;
 }
 #message {
   display: block;

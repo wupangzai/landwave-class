@@ -325,16 +325,17 @@ export default {
   background-color: #555;
 }
 #daily-class {
+  padding: 10px;
   width: 100%;
   height: 96vh;
   display: flex;
   .box-card-daily {
-    width: 80%;
+    width: 85%;
     overflow-y: auto;
     height: 98%;
 
     .box-card-remind-container {
-      padding-left: 55px;
+      padding-left: 40px;
       display: flex;
       flex-wrap: wrap;
       align-items: center;

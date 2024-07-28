@@ -275,6 +275,8 @@ export default {
 <style lang="less" scoped>
 #less-record {
   display: flex;
+  padding: 10px;
+
   .data-input {
     display: block;
     width: 280px;
