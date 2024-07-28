@@ -2,7 +2,7 @@
   <div id="wage">
     <div class="data-source">
       <el-input
-        placeholder="MetaBase Input(a month)"
+        placeholder="MetaBase Input(a month) 自己去下载一个月的！！！！"
         v-model="metaBaseInput"
         type="textarea"
         class="wage-input"
@@ -49,7 +49,9 @@
         v-model="level"
         class="wage-input"
       ></el-input> -->
-      <el-button @click="clickFn" style="margin-top: 40px">handler</el-button>
+      <el-button @click="clickFn" style="margin-top: 40px" type="primary"
+        >获取窝囊费</el-button
+      >
     </div>
     <div class="class-member">
       <el-card class="box-card box-card-container">
