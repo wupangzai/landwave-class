@@ -49,9 +49,9 @@
       <el-card class="box-card-daily">
         <div slot="header" class="clearfix">
           <span>上课提醒</span>
-          <el-button style="float: right; padding: 3px 0" type="text"
-            >操作按钮</el-button
-          >
+          <el-button style="float: right; padding: 3px 0" type="text">{{
+            date
+          }}</el-button>
         </div>
         <div class="box-card-remind-container">
           <div v-for="(item, index) in renderList" :key="index" class="">
@@ -139,6 +139,7 @@ export default {
       },
       renderList: [],
       roomList: [],
+      date: "",
     };
   },
   methods: {
@@ -148,6 +149,7 @@ export default {
         return item["助教"] === this.CAName;
       });
       console.log(listAfterFilterByCA);
+      this.date = moment().format("YYYY.MM.DD");
       const dataAfterSorted = this.sortByPropertyOrder(
         listAfterFilterByCA,
         "学生/班级"
@@ -222,6 +224,7 @@ export default {
         const sheetName = moment().add(1, "days").format("YYYY.M.D");
         // console.log("workbook.Sheets", workbook.Sheets);
         const worksheet = workbook.Sheets[sheetName];
+        this.date = sheetName;
 
         const jsonData = XLSX.utils.sheet_to_json(worksheet);
         console.log("jsonData", jsonData);

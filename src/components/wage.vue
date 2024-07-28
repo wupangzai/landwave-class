@@ -4,24 +4,55 @@
       <el-input
         placeholder="MetaBase Input(a month)"
         v-model="metaBaseInput"
+        type="textarea"
         class="wage-input"
       ></el-input>
-      <el-input
+
+      <el-select
+        v-model="CAName"
+        placeholder="请选择CA"
+        style="margin-top: 30px"
+        @change="changeCA"
+      >
+        <el-option
+          v-for="item in options"
+          :key="item.value"
+          :label="item.label"
+          :value="item.value"
+        >
+        </el-option>
+      </el-select>
+      <!-- <el-input
         style="margin-top: 30px"
         placeholder="CA"
         v-model="CAName"
         class="wage-input"
-      ></el-input>
-      <el-input
+      ></el-input> -->
+      <div>
+        <el-select
+          v-model="level"
+          placeholder="请选择职级"
+          style="margin-top: 30px"
+        >
+          <el-option
+            v-for="item in ['P1', 'P2', 'P3']"
+            :key="item"
+            :label="item"
+            :value="item"
+          >
+          </el-option>
+        </el-select>
+      </div>
+      <!-- <el-input
         style="margin-top: 30px"
         placeholder="职级"
         v-model="level"
         class="wage-input"
-      ></el-input>
+      ></el-input> -->
       <el-button @click="clickFn" style="margin-top: 40px">handler</el-button>
     </div>
     <div class="class-member">
-      <el-card class="box-card">
+      <el-card class="box-card box-card-container">
         <div slot="header" class="clearfix">
           <span>自己的班课娃娃们</span>
           <el-button style="float: right; padding: 3px 0" type="text"
@@ -88,6 +119,28 @@ export default {
   data() {
     return {
       metaBaseInput: "",
+      options: [
+        {
+          value: "吴彬",
+          label: "吴彬",
+        },
+        {
+          value: "王淑贤",
+          label: "王淑贤",
+        },
+        {
+          value: "刘维倩",
+          label: "刘维倩",
+        },
+        {
+          value: "董洁",
+          label: "董洁",
+        },
+        {
+          value: "王南飞",
+          label: "王南飞",
+        },
+      ],
       classMember: {
         吴彬: {
           YSQ1TGRG24225: [
@@ -106,6 +159,17 @@ export default {
             "强宇豪",
             "韩浩天",
           ],
+          YSQ2JCRG24256: ["姜越宸", "张子珺", "刘奕扬", "邵凯祺"],
+          YSQ2YBRG24142: [
+            "殷家家",
+            "卞凯源",
+            "柳心悦",
+            "许金睿东",
+            "梁亚冉",
+            "张展诰",
+            "童雪心",
+          ],
+          YSQ2TGRG24303: ["丁一帆", "叶成", "李响", "许安"],
         },
       },
       CAName: "",
@@ -332,6 +396,10 @@ export default {
   .des-tag {
     margin-left: 16px;
     margin-top: 5px;
+  }
+  .box-card-container {
+    height: 90vh;
+    overflow: auto;
   }
 }
 </style>
