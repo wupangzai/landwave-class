@@ -10,9 +10,11 @@
     >
       <div slot="header" class="clearfix">
         <span>{{ weekMap[index] }}</span>
-        <el-button style="float: right; padding: 3px 0" type="text">{{
-          day
-        }}</el-button>
+        <el-button
+          style="float: right; padding: 3px 0; color: red"
+          type="text"
+          >{{ day }}</el-button
+        >
       </div>
       <div
         v-for="option in options"

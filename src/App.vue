@@ -39,7 +39,7 @@
         <i class="el-icon-s-data"></i>
         <span slot="title">下周课表</span>
       </el-menu-item> -->
-      <el-menu-item index="5" disabled>
+      <el-menu-item index="5">
         <i class="el-icon-money"></i>
         <span slot="title">绩效统计</span>
       </el-menu-item>

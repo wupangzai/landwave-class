@@ -5,9 +5,11 @@
     <el-card class="box-card" v-for="(day, index) in weekdayList" :key="index">
       <div slot="header" class="clearfix">
         <span>{{ weekMap[index] }}</span>
-        <el-button style="float: right; padding: 3px 0" type="text">{{
-          day
-        }}</el-button>
+        <el-button
+          style="float: right; padding: 3px 0; color: red"
+          type="text"
+          >{{ day }}</el-button
+        >
       </div>
       <div
         v-for="option in options"
@@ -80,33 +82,23 @@ export default {
   },
   methods: {
     getNextWeekday() {
-      let week = 1; // 周数
-      let weekOfDay = new Date().getDay(); // 今天星期几
+      let obj = {};
+      const nextMonday = moment().day(1).add(1, "weeks").format("YYYY-MM-DD");
+      const nextSunday = moment().day(7).add(1, "weeks").format("YYYY-MM-DD");
 
-      for (let i = 0; i < week; i++) {
-        let last_monday = "",
-          last_sunday = "",
-          obj = {};
-        last_monday = moment()
-          .add(7 - weekOfDay + 7 * (i - 1) + 1, "d")
-          .format("YYYY-M-D");
-        last_sunday = moment()
-          .add(7 - weekOfDay + 7 * i, "d")
-          .format("YYYY-M-D");
-        obj.date = `${moment(last_monday).format("YYYY-MM-DD")}~${moment(
-          last_sunday
-        ).format("YYYY-MM-DD")}`;
+      obj.date = `${moment(nextMonday).format("YYYY-MM-DD")}~${moment(
+        nextSunday
+      ).format("YYYY-MM-DD")}`;
 
-        this.weekdayArrange = obj.date;
-        // console.log(this.weekdayArrange);
-        // console.log(moment(last_monday).add(1, "day").format("YYYY-MM-DD"));
-        const n = moment(last_sunday).diff(moment(last_monday), "days") + 1;
-        let temp = moment(last_monday).subtract(1, "days").format("YYYY-M-D");
-        Array.from({ length: n }, (_, i) => i + 1).forEach((item) => {
-          this.weekdayList.push(moment(temp).add(1, "day").format("YYYY-M-D"));
-          temp = moment(temp).add(1, "day").format("YYYY-M-D");
-        });
-      }
+      this.weekdayArrange = obj.date;
+      console.log(this.weekdayArrange);
+      // console.log(moment(last_monday).add(1, "day").format("YYYY-MM-DD"));
+      const n = moment(nextSunday).diff(moment(nextMonday), "days") + 1;
+      let temp = moment(nextMonday).subtract(1, "days").format("YYYY-M-D");
+      Array.from({ length: n }, (_, i) => i + 1).forEach((item) => {
+        this.weekdayList.push(moment(temp).add(1, "day").format("YYYY-M-D"));
+        temp = moment(temp).add(1, "day").format("YYYY-M-D");
+      });
     },
     async getData() {
       const res = await axios.get("/class/json", {

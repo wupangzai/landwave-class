@@ -149,7 +149,7 @@ export default {
         return item["助教"] === this.CAName;
       });
       console.log(listAfterFilterByCA);
-      this.date = moment().format("YYYY.MM.DD");
+      this.date = moment().add(1, "days").format("YYYY.MM.DD");
       const dataAfterSorted = this.sortByPropertyOrder(
         listAfterFilterByCA,
         "学生/班级"

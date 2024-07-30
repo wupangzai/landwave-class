@@ -34,9 +34,9 @@
       <el-card class="box-card">
         <div slot="header" class="clearfix">
           <span>昨日课程反馈记录</span>
-          <el-button style="float: right; padding: 3px 0" type="text"
-            >真的服了</el-button
-          >
+          <el-button style="float: right; padding: 3px 0" type="text">{{
+            yesterday
+          }}</el-button>
         </div>
         <div
           v-for="(record, index) in renderList[yesterday]"
@@ -49,6 +49,9 @@
               >{{ record.time }}
               <span style="margin-left: 10px">
                 {{ record.stuOrClass }}
+              </span>
+              <span style="margin-left: 10px">
+                {{ record.subject }}
               </span></el-tag
             >
           </el-checkbox>
@@ -60,9 +63,9 @@
       <el-card class="box-card">
         <div slot="header" class="clearfix">
           <span>今日课程反馈记录</span>
-          <el-button style="float: right; padding: 3px 0" type="text"
-            >真的服了</el-button
-          >
+          <el-button style="float: right; padding: 3px 0" type="text">{{
+            today
+          }}</el-button>
         </div>
         <div
           v-for="(record, index) in renderList[today]"
@@ -75,6 +78,9 @@
               >{{ record.time }}
               <span style="margin-left: 10px">
                 {{ record.stuOrClass }}
+              </span>
+              <span style="margin-left: 10px">
+                {{ record.subject }}
               </span></el-tag
             >
           </el-checkbox>
