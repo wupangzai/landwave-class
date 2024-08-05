@@ -22,7 +22,7 @@
         class="text item"
         style="margin-bottom: 15px"
       >
-        <el-tag type="info">
+        <el-tag :type="getCAColor(option.value)">
           {{ option.value }}
           共{{ handleCAToClass(index, option.value).length }}节课程</el-tag
         >
@@ -38,6 +38,14 @@
         </div>
       </div>
     </el-card>
+    <el-dialog title="提示" :visible.sync="dialogVisible" width="30%">
+      <div>请输入自己的中文名字（输入一次即可）</div>
+      <br />
+      <el-input v-model="dialogCA"></el-input>
+      <span slot="footer" class="dialog-footer">
+        <el-button type="primary" @click="dialogClose">确 定</el-button>
+      </span>
+    </el-dialog>
   </div>
 </template>
 
@@ -48,6 +56,8 @@ export default {
   name: "work-arrangement-current",
   data() {
     return {
+      dialogVisible: false,
+      dialogCA: "",
       metaBaseInput: "",
       weekdayArrange: "",
       options: [
@@ -208,9 +218,21 @@ export default {
     getBgcColor(day) {
       return this.today === day ? "today-color" : "";
     },
+    getCAColor(ca) {
+      return ca === localStorage.getItem("CAForArrangement")
+        ? "success"
+        : "info";
+    },
+    dialogClose() {
+      localStorage.setItem("CAForArrangement", this.dialogCA);
+      this.dialogVisible = false;
+    },
   },
   async mounted() {
     this.today = moment().format("YYYY-M-D");
+    if (!localStorage.getItem("CAForArrangement")) {
+      this.dialogVisible = true;
+    }
     this.clickFn();
   },
 };
