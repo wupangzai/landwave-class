@@ -43,6 +43,10 @@
         <i class="el-icon-money"></i>
         <span slot="title">绩效统计</span>
       </el-menu-item>
+      <el-menu-item index="6">
+        <i class="el-icon-user-solid"></i>
+        <span slot="title">Test CRM</span>
+      </el-menu-item>
     </el-menu>
 
     <router-view></router-view>
@@ -87,6 +91,8 @@ export default {
           break;
         case "5":
           this.$router.push("./wage");
+        case "6":
+          this.$router.push("./crm");
           break;
       }
     },
