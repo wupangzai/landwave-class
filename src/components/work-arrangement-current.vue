@@ -130,7 +130,7 @@ export default {
       });
     },
     async getData() {
-      const res = await axios.get("/class/json", {
+      const res = await axios.get("/myclass/json", {
         params: {
           parameters: JSON.stringify([
             {
