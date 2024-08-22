@@ -91,6 +91,7 @@ export default {
           break;
         case "5":
           this.$router.push("./wage");
+          break;
         case "6":
           this.$router.push("./crm");
           break;

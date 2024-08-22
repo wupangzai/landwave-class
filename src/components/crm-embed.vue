@@ -13,13 +13,25 @@
         <el-button type="primary" @click="getToken">确 定</el-button>
       </span>
     </el-dialog>
-    <input type="file" @change="fileChange" />上传
+    <div>
+      <el-input v-model="className" style="margin: 10px 0px; width: 350px">
+        <template slot="prepend">班级名称</template>
+      </el-input>
+    </div>
+    <div>
+      <el-upload class="upload-demo" drag action="" :on-error="fileChange">
+        <i class="el-icon-upload"></i>
+        <div class="el-upload__text">将文件拖到此处，或<em>点击上传</em></div>
+      </el-upload>
+    </div>
+    <el-button @click="fetch">handler</el-button>
   </div>
 </template>
 
 <script>
 import instance from "../api";
-import XLSX from "xlsx-js-style";
+
+const Excel = require("exceljs");
 
 export default {
   name: "crm-embed",
@@ -29,11 +41,21 @@ export default {
       account: "",
       password: "",
       token: "",
+      className: "",
     };
   },
   computed: {},
   methods: {
-    async validateToken() {},
+    async validateToken() {
+      try {
+        await instance.get(
+          "/crm/notifications?user_id=1799&is_read=0&per_page=99&page=1"
+        );
+      } catch (e) {
+        this.dialogVisible = true;
+        console.log(e);
+      }
+    },
     async getToken() {
       const res = await instance.post("/crm/pub/login", {
         org_id: 5,
@@ -43,50 +65,74 @@ export default {
       this.token = res.access_token;
       localStorage.setItem("token", this.token);
       console.log("token", this.token);
+      this.dialogVisible = false;
     },
-    fileChange(event) {
-      console.log(event.target.files[0]);
-      const file = event.target.files[0];
-      const reader = new FileReader();
-      reader.onload = (e) => {
-        const data = e.target.result;
-        if (this.rABS) {
-          this.wb = XLSX.read(btoa(fixdata(data)), {
-            type: "base64",
-          });
-        } else {
-          this.wb = XLSX.read(data, {
-            type: "binary",
-          });
-        }
-        const excelJson = XLSX.utils.sheet_to_json(
-          this.wb.Sheets[this.wb.SheetNames[0]]
-        );
-        console.log(excelJson);
-        // this.getTableData(excelJson);
-        XLSX.writeFile(this.wb, "output.xlsx");
-      };
-      if (this.rABS) {
-        reader.readAsArrayBuffer(file);
-      } else {
-        reader.readAsBinaryString(file);
-      }
+    async fileChange(e, file) {
+      const stream = file.raw.stream();
+
+      const workbook = new Excel.Workbook();
+
+      // 读取文件
+      const res = await workbook.xlsx.read(stream);
+      // 获取第一个工作
+      const worksheet = workbook.getWorksheet(1);
+
+      const data = [];
+      worksheet.eachRow({ includeEmpty: true }, (row, rowNumber) => {
+        const rowData = {};
+        row.eachCell({ includeEmpty: true }, (cell, colNumber) => {
+          if (cell.address === "C4") {
+            // 学生姓名
+            cell.value = "TEST NAME";
+          }
+
+          if (cell.address === "E4") {
+            // 课程名称
+            cell.value = "TEST CLASS";
+          }
+          if (cell.address === "E5") {
+            // 上课时间
+            cell.value = "TEST TIME";
+          }
+          if (cell.address === "J5") {
+            // 学服姓名
+            cell.value = "TEST TIME";
+          }
+          rowData[cell.value] = cell.value;
+          console.log(cell, cell.value);
+        });
+        data.push(rowData);
+      });
+      workbook.xlsx.writeBuffer().then((data) => {
+        const blob = new Blob([data], { type: "" });
+        saveAs(blob, "test.xlsx");
+      });
     },
-    fixdata(data) {
-      let o = "",
-        l = 0,
-        w = 10240;
-      for (; l < data.byteLength / w; ++l)
-        o += String.fromCharCode.apply(
-          null,
-          new Uint8Array(data.slice(l * w, l * w + w))
-        );
-      o += String.fromCharCode.apply(null, new Uint8Array(data.slice(l * w)));
-      return o;
+    async fetch() {
+      const res = await instance({
+        method: "GET",
+        url: "/crm/class-list?queryValue=24310&start_before=&start_after=&not_full=false&study_centers[]=17&large_than_three=false&order=start_asc&production_type=class&sort=-created_at&skip_acl=true&page=1",
+        // data: {
+        //   queryValue: this.className,
+        //   start_before: "",
+        //   start_after: "",
+        //   not_full: "",
+        //   ["study_centers[]"]: 17,
+        //   large_than_three: false,
+        //   order: "start_asc",
+        //   production_type: "class",
+        //   sort: "-created_at",
+        //   skip_ac: true,
+        //   page: 1,
+        // },
+      });
+      console.log("res", res);
     },
   },
 
-  created() {},
+  created() {
+    this.validateToken();
+  },
 };
 </script>
 
@@ -95,6 +141,6 @@ export default {
   width: 100%;
   /* height: 100vh; */
   overflow: auto;
-  display: flex;
+  // display: flex;
 }
 </style>
