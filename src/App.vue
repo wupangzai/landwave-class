@@ -45,7 +45,7 @@
       </el-menu-item>
       <el-menu-item index="6">
         <i class="el-icon-user-solid"></i>
-        <span slot="title">Test CRM</span>
+        <span slot="title">CRM</span>
       </el-menu-item>
     </el-menu>
 
