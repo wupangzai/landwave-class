@@ -5,17 +5,24 @@
       <el-radio-button :label="true">收起</el-radio-button>
     </el-radio-group> -->
     <el-menu
-      default-active="1"
+      default-active="1-1"
       class="el-menu-vertical-demo"
       @open="handleOpen"
       @close="handleClose"
       :collapse="isCollapse"
       @select="selectMenu"
     >
-      <el-menu-item index="1">
-        <i class="el-icon-s-operation"> </i>
-        <span slot="title">教室表下载</span>
-      </el-menu-item>
+      <el-submenu index="1">
+        <template slot="title">
+          <i class="el-icon-s-operation"></i>
+          <span slot="title">132</span>
+        </template>
+        <el-menu-item-group>
+          <span slot="title">分组一</span>
+          <el-menu-item index="1-1">教室表下载</el-menu-item>
+          <el-menu-item index="1-2">教教室表选择</el-menu-item>
+        </el-menu-item-group>
+      </el-submenu>
       <el-menu-item index="2">
         <i class="el-icon-position"></i>
         <span slot="title">上课提醒</span>
@@ -71,8 +78,11 @@ export default {
     selectMenu(index) {
       console.log(index);
       switch (index) {
-        case "1":
+        case "1-1":
           this.$router.push("./");
+          break;
+        case "1-2":
+          this.$router.push("./class-select");
           break;
         case "2":
           this.$router.push("./daily-class");
