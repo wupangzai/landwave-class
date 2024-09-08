@@ -20,7 +20,7 @@
         <el-menu-item-group>
           <span slot="title">分组一</span>
           <el-menu-item index="1-1">教室表下载</el-menu-item>
-          <el-menu-item index="1-2">教教室表选择</el-menu-item>
+          <el-menu-item index="1-2">教室表--Test</el-menu-item>
         </el-menu-item-group>
       </el-submenu>
       <el-menu-item index="2">

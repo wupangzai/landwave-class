@@ -93,6 +93,9 @@
                       display: inline-block;
                       width: 285px;
                       margin-left: 25px;
+                      white-space: nowrap;
+                      overflow: hidden;
+                      text-overflow: ellipsis;
                     "
                     >{{ stu.subject }}</span
                   >
@@ -114,6 +117,7 @@
               <div class="chamber">
                 <div
                   class="chamber-cell"
+                  :class="getRoomStu(room.label).length <= 1 ? 'onlyone' : ''"
                   v-for="(stu, index) in getRoomStu(room.label)"
                   :key="index"
                 >
@@ -123,6 +127,9 @@
                       display: inline-block;
                       width: 285px;
                       margin-left: 25px;
+                      white-space: nowrap;
+                      overflow: hidden;
+                      text-overflow: ellipsis;
                     "
                     >{{ stu.subject }}</span
                   >
@@ -520,6 +527,56 @@ export default {
           ["B37", "C37", "D37", "E37", "F37", "G37"],
           ["B38", "C38", "D38", "E38", "F38", "G38"],
         ],
+        教室1: [
+          ["I6", "J6", "K6", "L6", "M6", "N6"],
+          ["I7", "J7", "K7", "L7", "M7", "N7"],
+          ["I8", "J8", "K8", "L8", "M8", "N8"],
+        ],
+        教室2: [
+          ["I9", "J9", "K9", "L9", "M9", "N9"],
+          ["I10", "J10", "K10", "L10", "M10", "N10"],
+          ["I11", "J11", "K11", "L11", "M11", "N11"],
+          ["I12", "J12", "K12", "L12", "M12", "N12"],
+        ],
+        教室3: [
+          ["I13", "J13", "K13", "L13", "M13", "N13"],
+          ["I14", "J14", "K14", "L14", "M14", "N14"],
+          ["I15", "J15", "K15", "L15", "M15", "N15"],
+          ["I16", "J16", "K16", "L16", "M16", "N16"],
+        ],
+        教室4: [
+          ["I17", "J17", "K17", "L17", "M17", "N17"],
+          ["I18", "J18", "K18", "L18", "M18", "N18"],
+          ["I19", "J19", "K19", "L19", "M19", "N19"],
+          ["I20", "J20", "K20", "L20", "M20", "N20"],
+        ],
+        教室5: [
+          ["I21", "J21", "K21", "L21", "M21", "N21"],
+          ["I22", "J22", "K22", "L22", "M22", "N22"],
+          ["I23", "J23", "K23", "L23", "M23", "N23"],
+          ["I24", "J24", "K24", "L24", "M24", "N24"],
+        ],
+        教室6: [
+          ["I25", "J25", "K25", "L25", "M25", "N25"],
+          ["I26", "J26", "K26", "L26", "M26", "N26"],
+          ["I27", "J27", "K27", "L27", "M27", "N27"],
+        ],
+        教室7: [
+          ["I28", "J28", "K28", "L28", "M28", "N28"],
+          ["I29", "J29", "K29", "L29", "M29", "N29"],
+          ["I30", "J30", "K30", "L30", "M30", "N30"],
+          ["I31", "J31", "K31", "L31", "M31", "N31"],
+        ],
+        教室8: [
+          ["I32", "J32", "K32", "L32", "M32", "N32"],
+          ["I33", "J33", "K33", "L33", "M33", "N33"],
+          ["I34", "J34", "K34", "L34", "M34", "N34"],
+        ],
+        办公室: [
+          ["I35", "J35", "K35", "L35", "M35", "N35"],
+          ["I36", "J36", "K36", "L36", "M36", "N36"],
+          ["I37", "J37", "K37", "L37", "M37", "N37"],
+        ],
       };
 
       Object.keys(spaceMap).forEach((item, index) => {
@@ -581,9 +638,9 @@ export default {
     await this.getDataBase(); // 获取数据
     this.handleData(); // 处理数据
     this.getVIPAndClassList();
-    [37, 38].forEach((item) => {
+    [35, 36, 37].forEach((item) => {
       console.log(
-        `"B${item}","C${item}","D${item}","E${item}","F${item}","G${item}"`
+        `"I${item}","J${item}","K${item}","L${item}","M${item}","N${item}"`
       );
     });
   },
