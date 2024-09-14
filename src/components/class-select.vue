@@ -18,6 +18,18 @@
             <span style="margin-left: 10px">{{ stu.stuOrClass }}</span>
             <span style="margin-left: 10px">{{ getCAEnName(stu.CA) }}</span>
           </el-tag>
+          <el-tag
+            style="margin-left: 10px"
+            v-if="stu.studentClassPlace !== '半海人广'"
+            type="danger"
+            >{{ stu.studentClassPlace }}</el-tag
+          >
+          <el-tag
+            style="margin-left: 10px"
+            v-if="stu.studentServePlace !== '半海人广'"
+            type="danger"
+            >非本校区学生-{{ stu.studentServePlace }}</el-tag
+          >
           <el-select
             v-model="stu.classroom"
             placeholder="请选择"
@@ -31,6 +43,10 @@
               :label="item.label"
               :value="item.label"
             >
+              <span style="float: left">{{ item.label }}</span>
+              <span style="float: right; color: #8492a6; font-size: 13px">{{
+                item.tip
+              }}</span>
             </el-option>
           </el-select>
         </div>
@@ -50,6 +66,18 @@
             <span style="margin-left: 10px">{{ stu.stuOrClass }}</span>
             <span style="margin-left: 10px">{{ getCAEnName(stu.CA) }}</span>
           </el-tag>
+          <el-tag
+            style="margin-left: 10px"
+            v-if="stu.studentClassPlace !== '半海人广'"
+            type="danger"
+            >{{ stu.studentClassPlace }}</el-tag
+          >
+          <el-tag
+            style="margin-left: 10px"
+            v-if="stu.studentClassPlace !== '半海人广'"
+            type="danger"
+            >非本校区学生-{{ stu.studentServePlace }}</el-tag
+          >
           <el-select
             v-model="stu.classroom"
             placeholder="请选择"
@@ -63,6 +91,10 @@
               :label="item.label"
               :value="item.label"
             >
+              <span style="float: left">{{ item.label }}</span>
+              <span style="float: right; color: #8492a6; font-size: 13px">{{
+                item.tip
+              }}</span>
             </el-option>
           </el-select>
         </div>
@@ -179,28 +211,35 @@ export default {
       classroomOptions: [
         {
           label: "VIP1",
+          tip: "",
         },
 
         {
           label: "VIP2",
+          tip: "有空调",
         },
         {
           label: "VIP3",
+          tip: "",
         },
         {
           label: "VIP4",
+          tip: "有空调",
         },
         {
           label: "VIP5",
         },
         {
           label: "VIP6",
+          tip: "有空调",
         },
         {
           label: "VIP7",
+          tip: "有空调",
         },
         {
           label: "VIP8",
+          tip: "有空调",
         },
         {
           label: "VIP9",
@@ -240,6 +279,9 @@ export default {
         },
         {
           label: "办公室",
+        },
+        {
+          label: "中转区",
         },
       ],
       renderLeft: [
@@ -310,7 +352,7 @@ export default {
           label: "办公室",
         },
         {
-          label: " ",
+          label: "中转区",
         },
         {
           label: "  ",
@@ -415,6 +457,8 @@ export default {
           stuOrClass: item["学生/班级"],
           teacher: item["教师"],
           CA: item["助教"],
+          studentClassPlace: item["上课校区"],
+          studentServePlace: item["学生服务校区"],
         };
       });
       console.log("[  ] >", this.renderList);
@@ -577,6 +621,13 @@ export default {
           ["I36", "J36", "K36", "L36", "M36", "N36"],
           ["I37", "J37", "K37", "L37", "M37", "N37"],
         ],
+        中转区: [
+          ["I38", "J38", "K38", "L38", "M38", "N38"],
+          ["I39", "J39", "K39", "L39", "M39", "N39"],
+          ["I40", "J40", "K40", "L40", "M40", "N40"],
+          ["I41", "J41", "K41", "L41", "M41", "N41"],
+          ["I42", "J42", "K42", "L42", "M42", "N42"],
+        ],
       };
 
       Object.keys(spaceMap).forEach((item, index) => {
@@ -638,7 +689,7 @@ export default {
     await this.getDataBase(); // 获取数据
     this.handleData(); // 处理数据
     this.getVIPAndClassList();
-    [35, 36, 37].forEach((item) => {
+    [38, 39, 40, 41, 42].forEach((item) => {
       console.log(
         `"I${item}","J${item}","K${item}","L${item}","M${item}","N${item}"`
       );
@@ -740,7 +791,7 @@ export default {
 }
 
 .selector {
-  width: 100px;
+  width: 130px;
   height: 35px;
   margin-left: 10px;
 }
