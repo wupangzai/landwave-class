@@ -1,5 +1,18 @@
 <template>
   <div id="daily-class">
+    <el-dialog title="登录CRM系统" :visible.sync="dialogVisible" width="30%">
+      <span>请登录</span><br />
+      <el-input v-model="account" style="margin-top: 10px">
+        <template slot="prepend">账号：</template>
+      </el-input>
+      <el-input v-model="password" style="margin-top: 10px" type="password">
+        <template slot="prepend">密码：</template>
+      </el-input>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="dialogVisible = false">取 消</el-button>
+        <el-button type="primary" @click="getToken">确 定</el-button>
+      </span>
+    </el-dialog>
     <div class="data-source">
       <el-input
         placeholder="MetaBase Data"
@@ -26,7 +39,10 @@
       </div>
 
       <el-button type="primary" style="margin-top: 20px" @click="clickFn">
-        获取上课提醒
+        Type: DEMO
+      </el-button>
+      <el-button type="primary" style="margin-top: 20px" @click="crmClickFn">
+        Type: CRM
       </el-button>
       <el-tag type="warning" style="margin-left: 0px; display: block"
         >不带教室，破系统没有数据,神仙都做不出来👆</el-tag
@@ -89,6 +105,8 @@ const XLSX = require("xlsx-js-style");
 import axios from "axios";
 import _ from "lodash";
 import moment from "moment";
+import instance from "../api";
+
 export default {
   name: "DailyClass",
   data() {
@@ -140,6 +158,10 @@ export default {
       renderList: [],
       roomList: [],
       date: "",
+      dialogVisible: false,
+      account: "",
+      password: "",
+      token: "",
     };
   },
   methods: {
@@ -163,6 +185,57 @@ export default {
           teacher: item["教师"],
         };
       });
+    },
+    async crmClickFn() {
+      try {
+        await this.validateToken();
+        // clickFn
+        const dataAfterParase = JSON.parse(this.metaBaseInput);
+        const listAfterFilterByCA = dataAfterParase.filter((item) => {
+          return item["助教"] === this.CAName;
+        });
+        // console.log(listAfterFilterByCA);
+        const dataAfterSorted = this.sortByPropertyOrder(
+          listAfterFilterByCA,
+          "学生/班级"
+        );
+        console.log("dataAfterSorted", dataAfterSorted);
+        const crmList = await this.getCRMRoomArrangement();
+        console.log(crmList);
+
+        this.renderList = dataAfterSorted.map((item, index) => {
+          let classroom;
+          let isOnline;
+
+          crmList.forEach((crmDetail, i) => {
+            const crmTime = `${crmDetail.start.slice(
+              -8,
+              -3
+            )}-${crmDetail.end.slice(-8, -3)}`;
+            const metaBaseTime = `${item.start.slice(-5)}-${item.end.slice(
+              -5
+            )}`;
+            if (
+              crmDetail.object_name === item["学生/班级"] &&
+              crmTime === metaBaseTime
+            ) {
+              classroom = crmDetail.class_room_name;
+              if (!classroom && crmDetail.title.includes("远程课")) {
+                isOnline = true;
+              }
+            }
+          });
+          return {
+            time: `${item.start.slice(-5)}-${item.end.slice(-5)}`,
+            subject: item["课程"],
+            stuOrClass: item["学生/班级"],
+            teacher: item["教师"],
+            classroom,
+            isOnline,
+          };
+        });
+        console.log("12", this.renderList);
+      } catch (e) {}
     },
     sortByPropertyOrder(arr, property) {
       const groups = arr.reduce((acc, obj) => {
@@ -294,6 +367,46 @@ export default {
         });
         console.log(this.renderList);
       };
+    },
+    async validateToken() {
+      try {
+        const res = await instance.get(
+          "/crm/notifications?user_id=1799&is_read=0&per_page=99&page=1"
+        );
+        if (res?.response?.status === 401) {
+          this.$message.error("身份验证过期，请重新登录");
+
+          this.dialogVisible = true;
+        }
+      } catch (e) {
+        console.log(e);
+      }
+    },
+    async getToken() {
+      const res = await instance.post("/crm/pub/login", {
+        org_id: 5,
+        username: this.account,
+        password: this.password,
+      });
+      this.token = res.access_token;
+      localStorage.setItem("token", this.token);
+      console.log("token", this.token);
+      if (this.token) {
+        this.$message.success("登录成功");
+      } else {
+        this.$$message.error("登录错误，maybe是密码错误");
+      }
+      this.dialogVisible = false;
+    },
+    async getCRMRoomArrangement() {
+      const res = await instance.get(
+        `https://crm-api.landwave.cn/api/v1/course-schedulings/all?date=${moment()
+          .add(1, "days")
+          .format(
+            "YYYY-MM-DD"
+          )}&includes[]=classroom&includes[]=teacher&includes[]=class&includes[]=classItem&includes[]=classroomSchedule&includes[]=classAdviser&sort=start&study_center_id=17`
+      );
+      return res.list;
     },
   },
   async created() {
