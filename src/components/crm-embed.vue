@@ -13,76 +13,99 @@
         <el-button type="primary" @click="getToken">确 定</el-button>
       </span>
     </el-dialog>
-    <div class="info-form">
-      <div>
-        <el-tag> 👇生成学员信息表 </el-tag>
-        <el-tag type="info">
-          <a href="/学员信息表-template.xlsx" download
-            >点击下载学员信息表模板文件</a
-          >
-        </el-tag>
-      </div>
-      <div>
-        <el-upload
-          class="upload-demo"
-          drag
-          action=""
-          :on-error="fileChangeInfo"
-        >
-          <i class="el-icon-upload"></i>
-          <div class="el-upload__text">将文件拖到此处，或<em>点击上传</em></div>
-        </el-upload>
-      </div>
-      <div v-for="info in tagList" :key="info" style="margin: 10px 0px">
-        <el-tag type="warning"> {{ info }} </el-tag>
-      </div>
+    <el-tabs type="border-card" class="border-card-mine">
+      <el-tab-pane label="模板下载">
+        <div class="download-area">
+          <div class="info-form">
+            <div>
+              <el-tag> 👇生成学员信息表 </el-tag>
+              <el-tag type="info">
+                <a href="/学员信息表-template.xlsx" download
+                  >点击下载学员信息表模板文件</a
+                >
+              </el-tag>
+            </div>
+            <div>
+              <el-upload
+                class="upload-demo"
+                drag
+                action=""
+                :on-error="fileChangeInfo"
+              >
+                <i class="el-icon-upload"></i>
+                <div class="el-upload__text">
+                  将文件拖到此处，或<em>点击上传</em>
+                </div>
+              </el-upload>
+            </div>
+            <div v-for="info in tagList" :key="info" style="margin: 10px 0px">
+              <el-tag type="warning"> {{ info }} </el-tag>
+            </div>
 
-      <el-input v-model="className" style="margin: 10px 0px; width: 350px">
-        <template slot="prepend">班级名称</template>
-      </el-input>
-      <div>
-        <el-button @click="fetch" type="danger">偷取班级数据</el-button>
-      </div>
-    </div>
-    <div class="sign-form">
-      <div>
-        <el-tag> 👇生成签到表 </el-tag>
-        <el-tag type="info">
-          <a href="/学生签到表-template.xlsx" download
-            >点击下载学员签到表模板文件</a
-          >
-        </el-tag>
-      </div>
-      <div>
-        <el-upload
-          class="upload-demo"
-          drag
-          action=""
-          :on-error="fileChangeSign"
-        >
-          <i class="el-icon-upload"></i>
-          <div class="el-upload__text">将文件拖到此处，或<em>点击上传</em></div>
-        </el-upload>
-      </div>
-    </div>
-    <div class="teacher-feedback">
-      <div class="">
-        <div>
-          <el-tag>👇生成教师反馈表</el-tag>
-          <el-tag type="info">
-            <a href="/学员打分表-template.xlsx" download
-              >点击下载学员打分表模板文件</a
+            <el-input
+              v-model="className"
+              style="margin: 10px 0px; width: 350px"
             >
-          </el-tag>
+              <template slot="prepend">班级名称</template>
+            </el-input>
+            <div>
+              <el-button @click="fetch" type="danger">偷取班级数据</el-button>
+            </div>
+          </div>
+          <div class="sign-form">
+            <div>
+              <el-tag> 👇生成签到表 </el-tag>
+              <el-tag type="info">
+                <a href="/学生签到表-template.xlsx" download
+                  >点击下载学员签到表模板文件</a
+                >
+              </el-tag>
+            </div>
+            <div>
+              <el-upload
+                class="upload-demo"
+                drag
+                action=""
+                :on-error="fileChangeSign"
+              >
+                <i class="el-icon-upload"></i>
+                <div class="el-upload__text">
+                  将文件拖到此处，或<em>点击上传</em>
+                </div>
+              </el-upload>
+            </div>
+          </div>
+          <div class="teacher-feedback">
+            <div class="">
+              <div>
+                <el-tag>👇生成教师反馈表</el-tag>
+                <el-tag type="info">
+                  <a href="/学员打分表-template.xlsx" download
+                    >点击下载学员打分表模板文件</a
+                  >
+                </el-tag>
+              </div>
+            </div>
+            <div>
+              <el-upload
+                class="upload-demo"
+                drag
+                action=""
+                :on-error="fileChange"
+              >
+                <i class="el-icon-upload"></i>
+                <div class="el-upload__text">
+                  将文件拖到此处，或<em>点击上传</em>
+                </div>
+              </el-upload>
+            </div>
+          </div>
         </div>
-      </div>
-      <div>
-        <el-upload class="upload-demo" drag action="" :on-error="fileChange">
-          <i class="el-icon-upload"></i>
-          <div class="el-upload__text">将文件拖到此处，或<em>点击上传</em></div>
-        </el-upload>
-      </div>
-    </div>
+      </el-tab-pane>
+      <el-tab-pane label="配置管理">配置管理</el-tab-pane>
+      <el-tab-pane label="角色管理">角色管理</el-tab-pane>
+      <el-tab-pane label="定时任务补偿">定时任务补偿</el-tab-pane>
+    </el-tabs>
   </div>
 </template>
 
@@ -477,6 +500,15 @@ export default {
   overflow: auto;
   display: flex;
   padding: 5px;
+  .border-card-mine {
+    width: 100%;
+  }
+  .download-area {
+    width: 100%;
+
+    // overflow: auto;
+    display: flex;
+  }
 
   .teacher-feedback {
     flex: 1;
