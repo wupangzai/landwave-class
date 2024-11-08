@@ -385,6 +385,10 @@ export default {
           value: "王南飞",
           label: "Winnie",
         },
+        {
+          name: "胡庭玥",
+          EName: "Rebeca",
+        },
       ],
       dayMap: [
         {

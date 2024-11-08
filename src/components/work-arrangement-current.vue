@@ -86,6 +86,11 @@ export default {
           label: "刘维倩",
           type: "",
         },
+        {
+          value: "胡庭玥",
+          label: "胡庭玥",
+          type: "",
+        },
       ],
       weekdayList: [],
       renderList: [], // 二维数组 [[]]

@@ -39,10 +39,10 @@
       </div>
 
       <el-button type="primary" style="margin-top: 20px" @click="clickFn">
-        Type: DEMO
+        TYPE: DEMO
       </el-button>
       <el-button type="primary" style="margin-top: 20px" @click="crmClickFn">
-        Type: CRM
+        TYPE: CRM
       </el-button>
       <el-tag type="warning" style="margin-left: 0px; display: block"
         >不带教室，破系统没有数据,神仙都做不出来👆</el-tag
@@ -50,12 +50,7 @@
 
       <div style="margin-right: 20px; width: 280px; margin-top: 50px">
         <el-tag type="danger">带教室的 Pro Test Version👇 出错了别找我</el-tag>
-        <el-upload
-          class="upload-demo"
-          drag
-          action="https://jsonplaceholder.typicode.com/posts/"
-          :on-error="upload"
-        >
+        <el-upload class="upload-demo" drag action="" :on-error="upload">
           <i class="el-icon-upload"></i>
           <div class="el-upload__text">将文件拖到此处，或<em>点击上传</em></div>
         </el-upload>
@@ -133,6 +128,10 @@ export default {
         {
           value: "王南飞",
           label: "王南飞",
+        },
+        {
+          value: "胡庭玥",
+          label: "胡庭玥",
         },
       ],
       classMember: {

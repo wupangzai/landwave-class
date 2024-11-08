@@ -102,9 +102,14 @@
           </div>
         </div>
       </el-tab-pane>
-      <el-tab-pane label="配置管理">配置管理</el-tab-pane>
-      <el-tab-pane label="角色管理">角色管理</el-tab-pane>
-      <el-tab-pane label="定时任务补偿">定时任务补偿</el-tab-pane>
+      <el-tab-pane label="我的学生生源统计">
+        <el-button
+          @click="getMineStudentList"
+          v-loading.fullscreen.lock="fullscreenLoading"
+          text="5645"
+          >获取我的学生列表数据</el-button
+        >
+      </el-tab-pane>
     </el-tabs>
   </div>
 </template>
@@ -133,6 +138,7 @@ export default {
         "③ 点击偷取班级数据，开偷,弹出提示框就是偷到了",
         "④ 上传对应模板到指定位置即可",
       ],
+      fullscreenLoading: false,
     };
   },
   computed: {},
@@ -483,6 +489,229 @@ export default {
       workbook.xlsx.writeBuffer().then((data) => {
         const blob = new Blob([data], { type: "" });
         saveAs(blob, `${this.courseDetail.product_name}学员信息表.xlsx`);
+      });
+    },
+    async getMineStudentList() {
+      this.fullscreenLoading = true;
+      const res = await instance({
+        method: "GET",
+        url: "https://crm-api.landwave.cn/api/v1/students",
+        params: {
+          sort: "-created_at",
+          is_student: "true",
+          adviser_mine: "true",
+          per_page: 9999,
+        },
+      });
+      for (const item of res.list) {
+        const info = await this.getDetail(item.member.able_id);
+        const calendars = await this.getCalendars(item.member.able_id);
+        item.extraInfo = info;
+        item.calendars = calendars;
+      }
+      console.log(res.list);
+      this.exportExcel(res.list);
+      this.fullscreenLoading = false;
+    },
+
+    async getDetail(id) {
+      const res = await instance({
+        method: "GET",
+        url: `https://crm-api.landwave.cn/api/v1/students/${id}?id=${id}&includes[]=lead&includes[]=lead.SourceSchool&includes[]=lead.StudyCenter&includes[]=lead.OriginalOwnerUser&includes[]=lead.PresentOwnerUser&includes[]=lead.CreatedByUser&includes[]=lead.contactLeads&includes[]=lead.SourceType&includes[]=studentFollowup&includes[]=testRecords`,
+      });
+      return res;
+    },
+
+    async getCalendars(id) {
+      const res = await instance({
+        method: "GET",
+        url: `https://crm-api.landwave.cn/api/v1/calendars?studentId=${id}&is_mixed=false`,
+      });
+      return res;
+    },
+    exportExcel(studentList) {
+      const workbook = new Excel.Workbook(); // 创建工作簿// 下载工作簿
+
+      const worksheet = workbook.addWorksheet("我的学生信息表", {
+        properties: { tabColor: { argb: "FFC0000" } },
+      }); // 创建一个工作表
+
+      worksheet.views = [
+        {
+          state: "frozen",
+          ySplit: 1,
+        },
+      ];
+
+      const header = [
+        "开课日期",
+        "结课日期",
+        "学生姓名",
+        "课程类别",
+        "1V1/班课",
+        "联系方式(学生/家长)",
+        "班主任",
+        "咨询老师",
+        "课时",
+        "学校",
+        "年级",
+        "上次考试日期",
+        "下次考试日期",
+        "原始成绩",
+        "目标成绩",
+        "学员所报课程",
+        "是否可续",
+        "备注",
+      ];
+
+      worksheet.columns = [
+        { width: 15 }, // 设置第1列的宽度为20
+        { width: 15 }, // 设置第2列的宽度为10
+        { width: 15 }, // 设置第3列的宽度为15
+        { width: 15 }, // 设置第1列的宽度为20
+        { width: 15 }, // 设置第2列的宽度为10
+        { width: 25 }, // 设置第3列的宽度为15
+        { width: 15 }, // 设置第1列的宽度为20
+        { width: 15 }, // 设置第2列的宽度为10
+        { width: 15 }, // 设置第3列的宽度为15
+        { width: 15 }, // 设置第1列的宽度为20
+        { width: 15 }, // 设置第2列的宽度为10
+        { width: 15 }, // 设置第3列的宽度为15
+        { width: 15 }, // 设置第1列的宽度为20
+        { width: 15 }, // 设置第2列的宽度为10
+        { width: 15 }, // 设置第3列的宽度为15
+        { width: 15 }, // 设置第2列的宽度为10
+        { width: 15 }, // 设置第3列的宽度为15
+        { width: 15 }, // 设置第1列的宽度为20
+        { width: 15 }, // 设置第2列的宽度为10
+        { width: 15 }, // 设置第3列的宽度为15
+        { width: 15 }, // 设置第1列的宽度为20
+        { width: 15 }, // 设置第2列的宽度为10
+        { width: 15 }, // 设置第3列的宽度为15
+      ];
+
+      const list = studentList.map((stu, index) => {
+        const startDay = moment(stu.calendars?.[0].start).format("YYYY-MM-DD");
+        const endtDay = moment(
+          stu.calendars?.[stu.calendars.length - 1].end
+        ).format("YYYY-MM-DD");
+        const courseList = [];
+
+        let courseTime = 0;
+
+        if (stu?.calendars?.length > 0) {
+          stu?.calendars?.forEach((course) => {
+            if (course?.title?.includes("雅思")) {
+              courseList.push("雅思");
+            }
+            if (course?.title?.includes("AL")) {
+              courseList.push("Alevel");
+            }
+            if (course?.title?.includes("IG")) {
+              courseList.push("IG");
+            }
+            if (course?.title?.includes("IB")) {
+              courseList.push("IB");
+            }
+            if (course?.title?.includes("AP")) {
+              courseList.push("AP");
+            }
+            if (course?.title?.includes("PTE")) {
+              courseList.push("PTE");
+            }
+            courseTime += moment(course.end).diff(
+              moment(course.start),
+              "hours"
+            );
+          });
+        }
+
+        const afterFilterCourseList = Array.from(new Set([...courseList]));
+        console.log("afterFilterCourseList", afterFilterCourseList);
+
+        return [
+          startDay,
+          endtDay,
+          stu.name,
+          afterFilterCourseList.join("/"),
+          stu.type_text,
+          stu.extraInfo?.contacts?.[0]?.phone,
+          stu.extraInfo.progress_adviser_name,
+          stu.extraInfo.present_owner_name,
+          `${courseTime}h`,
+          stu.extraInfo.source_school,
+          stu.extraInfo.grade_text,
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          `${stu.extraInfo.study_needs?.[0]?.character}+${stu.extraInfo.study_needs?.[0]?.experience}+${stu.extraInfo.study_needs?.[0]?.level}+${stu.extraInfo.study_needs?.[0]?.memo}+${stu.extraInfo.study_needs?.[0]?.parent_info}`,
+        ];
+      });
+
+      const data = [header, ...list];
+
+      worksheet.addRows(data);
+      worksheet.getRow(1).height = 30;
+      // 设置第一行单元格的背景颜色和字体颜色
+      worksheet.getRow(1).eachCell((cell) => {
+        // 设置填充颜色为浅蓝色
+        cell.fill = {
+          type: "pattern",
+          pattern: "solid",
+          fgColor: { argb: "C6E0B4" }, // 浅蓝色 (ARGB)
+        };
+
+        // 设置字体为粗体，白色
+        cell.font = {
+          bold: true,
+          // color: { argb: "FFFFFFFF" }, // 白色 (ARGB)
+        };
+
+        cell.border = {
+          top: { style: "thin", color: { argb: "FF000000" } }, // 上边框，黑色
+          left: { style: "thin", color: { argb: "FF000000" } }, // 左边框，黑色
+          bottom: { style: "thin", color: { argb: "FF000000" } }, // 下边框，黑色
+          right: { style: "thin", color: { argb: "FF000000" } }, // 右边框，黑色
+        };
+
+        // 水平居中对齐
+        cell.alignment = { horizontal: "center", vertical: "middle" };
+      });
+
+      // 遍历每一行，并对每隔一行设置高亮浅蓝色
+      worksheet.eachRow((row, rowNumber) => {
+        // 判断是否是偶数行
+        if (rowNumber % 2 === 0) {
+          // 遍历该行的每个单元格并设置背景颜色
+          row.eachCell((cell) => {
+            // cell.fill = {
+            //   type: "pattern",
+            //   pattern: "solid",
+            //   fgColor: { argb: "FFADD8E6" }, // 浅蓝色 (ARGB)
+            // };
+            cell.alignment = { vertical: "middle" };
+          });
+        }
+
+        // 遍历该行的每个单元格并设置背景颜色
+        row.eachCell((cell) => {
+          cell.alignment = { vertical: "middle" };
+        });
+
+        if (rowNumber > 1) {
+          // 排除第一行
+          row.height = 20; // 将行高设置为 20
+        }
+      });
+
+      workbook.xlsx.writeBuffer().then((buffer) => {
+        saveAs(
+          new Blob([buffer], { type: "application/octet-stream" }),
+          `${moment().format("YYYY-MM-DD")}-学生信息汇总-.xlsx`
+        );
       });
     },
   },

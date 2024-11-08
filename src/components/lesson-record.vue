@@ -137,6 +137,10 @@ export default {
           value: "王南飞",
           label: "王南飞",
         },
+        {
+          value: "胡庭玥",
+          label: "胡庭玥",
+        },
       ],
       lessonRecordList: [],
       lessonNextRecordList: [],

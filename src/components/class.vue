@@ -133,6 +133,10 @@ export default {
           name: "许鹏",
           EName: "许鹏",
         },
+        {
+          name: "胡庭玥",
+          EName: "Rebeca",
+        },
       ],
       count: 0,
       studentNotInRenGuang: 0,
