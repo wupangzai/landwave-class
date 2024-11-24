@@ -163,7 +163,10 @@ export default {
           stuOrClass: item["学生/班级"],
           teacher: item["教师"],
           CAName: item["助教"],
-          lessonTime: `${item.start.slice(-5)}-${item.end.slice(-5)}`,
+          // lessonTime: `${item.start.slice(-5)}-${item.end.slice(-5)}`,
+          lessonTime: `${moment(item.start).format("HH:mm")}-${moment(
+            item.end
+          ).format("HH:mm")}`,
         };
       }); // 映射时间，等信息
       //   console.log("dataAfterTranslate", dataAfterTranslate);
