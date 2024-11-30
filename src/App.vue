@@ -54,6 +54,17 @@
         <i class="el-icon-user-solid"></i>
         <span slot="title">CRM</span>
       </el-menu-item>
+      <el-submenu index="7">
+        <template slot="title">
+          <i class="el-icon-search"></i>
+          <span slot="title">IELTS</span>
+        </template>
+        <el-menu-item-group>
+          <span slot="title">分组一</span>
+          <el-menu-item index="7-1">剑桥雅思</el-menu-item>
+          <el-menu-item index="7-2">开/结班测试题</el-menu-item>
+        </el-menu-item-group>
+      </el-submenu>
     </el-menu>
 
     <router-view></router-view>
@@ -104,6 +115,15 @@ export default {
           break;
         case "6":
           this.$router.push("./crm");
+          break;
+        case "7":
+          this.$router.push("./ielts");
+          break;
+        case "7-1":
+          this.$router.push("./ielts");
+          break;
+        case "7-2":
+          this.$router.push("./class-test");
           break;
       }
     },
