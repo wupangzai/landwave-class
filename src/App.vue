@@ -65,6 +65,10 @@
           <el-menu-item index="7-2">开/结班测试题</el-menu-item>
         </el-menu-item-group>
       </el-submenu>
+      <el-menu-item index="8">
+        <i class="el-icon-odometer"></i>
+        <span slot="title">chart</span>
+      </el-menu-item>
     </el-menu>
 
     <router-view></router-view>
@@ -124,6 +128,9 @@ export default {
           break;
         case "7-2":
           this.$router.push("./class-test");
+          break;
+        case "8":
+          this.$router.push("./chart");
           break;
       }
     },

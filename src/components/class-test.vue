@@ -291,7 +291,7 @@ export default {
           arry[index]["children"] = ["开班测试", "结班测试"].map((item, i) => {
             return {
               key: Math.random(),
-              title: `${i + 1}. ${item}`,
+              title: ` -- ${item}`,
               listening: this.linkMap?.[clas]?.[item]?.listening,
               listeningAnswer: this.linkMap?.[clas]?.[item]?.listeningAnswer,
               reading: this.linkMap?.[clas]?.[item]?.reading,

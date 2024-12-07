@@ -11,6 +11,7 @@ import WorkArrangementCurrent from "../components/work-arrangement-current.vue";
 import CrmEmbed from "../components/crm-embed.vue";
 import Ielts from "../components/ielts.vue";
 import ClassTest from "../components/class-test.vue";
+import Chart from "../components/chart.vue";
 
 const routes = [
   { path: "/", component: ClassHome },
@@ -25,6 +26,7 @@ const routes = [
   { path: "/crm", component: CrmEmbed },
   { path: "/ielts", component: Ielts },
   { path: "/class-test", component: ClassTest },
+  { path: "/chart", component: Chart },
 ];
 
 const router = new VueRouter({
