@@ -12,6 +12,7 @@ import CrmEmbed from "../components/crm-embed.vue";
 import Ielts from "../components/ielts.vue";
 import ClassTest from "../components/class-test.vue";
 import Chart from "../components/chart.vue";
+import IeltsAssignment from "../components/ielts-assignment.vue";
 
 const routes = [
   { path: "/", component: ClassHome },
@@ -27,6 +28,7 @@ const routes = [
   { path: "/ielts", component: Ielts },
   { path: "/class-test", component: ClassTest },
   { path: "/chart", component: Chart },
+  { path: "/ielts-assignment", component: IeltsAssignment },
 ];
 
 const router = new VueRouter({

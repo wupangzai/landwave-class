@@ -1,268 +1,178 @@
 <template>
-  <div id="chart">
-    <div id="container">
-      <el-button @click="run">123</el-button>
-    </div>
+  <div id="container">
+    <el-card class="box-card">
+      <div slot="header" class="clearfix">
+        <el-input
+          style="width: 60%"
+          v-model="inputValue"
+          placeholder="输入内容，点击右侧按钮或Enter保存"
+          @change="addTask"
+        ></el-input>
+        <el-button
+          style="padding: 3px 0; margin-left: 10px"
+          type="text"
+          @click="addTask"
+          >Add-Task</el-button
+        >
+        <el-button
+          style="margin-top: 1px; float: right; color: red"
+          type="text"
+          @click="addTask"
+          >删除全部</el-button
+        >
+      </div>
+      <div v-for="(task, index) in renderValue" :key="index" class="text item">
+        <div class="line">
+          <el-checkbox v-model="task.completed"></el-checkbox>
+          <div
+            class="text"
+            v-if="!task.editing"
+            :class="task.completed ? 'task-completed' : ''"
+          >
+            {{ task.value }}
+          </div>
+          <el-input
+            class="text"
+            v-model="task.value"
+            v-else
+            placeholder="请输入内容"
+            @change="onblur(index)"
+          ></el-input>
+          <div>
+            <span style="font-size: 12px; color: #ccc; padding-right: 5px">{{
+              task.createTime
+            }}</span>
+            <i
+              class="el-icon-edit"
+              style="color: red; cursor: pointer; padding: 0 5px"
+              @click="editTask(index)"
+            ></i>
+            <i
+              class="el-icon-delete"
+              style="color: red; cursor: pointer"
+              @click="deleteTask(index)"
+            ></i>
+          </div>
+        </div>
+      </div>
+    </el-card>
   </div>
 </template>
 
 <script>
-import * as echarts from "echarts";
-import $ from "jquery";
-import a from "./life-expectancy-table.json";
+import moment from "moment";
 export default {
   name: "Chart",
   data() {
     return {
-      myChart: "",
+      inputValue: "",
+      renderValue: [],
     };
   },
   methods: {
-    run(_rawData) {
-      let option = {
-        title: {
-          text: "班课学生统计",
-          subtext: "Fake Data",
-        },
-        tooltip: {
-          trigger: "axis",
-          axisPointer: {
-            type: "cross",
-          },
-          formatter: function (params) {
-            console.log(params[0].name);
-            const memberMap = {
-              "24225(6分)": {
-                count: 3,
-                test: 2,
-                achieve: "0    (5.5)",
-                fund: "1人 周骏杰",
-                highscore: "",
-              },
-              "24201U(6.5分)": {
-                count: 6,
-                test: 4,
-                achieve: "1人 7.5 6.0 6.0 5.5",
-                fund: "0",
-                highscore: "1人 - 虞泊轩 7.5",
-              },
-              "24256(5.5分)": {
-                count: 4,
-                test: 1,
-                achieve: "1人 邵凯祺（5.5）",
-                fund: "1人 张子珺",
-                highscore: "",
-              },
-              "24142(预备)": {
-                count: 7,
-                test: 0,
-                achieve: "0",
-                fund: "1人 许金睿东",
-                highscore: "",
-              },
-              "24303(5.5-6精品)": {
-                count: 5,
-                test: 1,
-                achieve: "1人 钱旌弘（6.0）",
-                fund: "0",
-                highscore: "",
-              },
-              "24179U(6分)": {
-                count: 4,
-                test: 1,
-                achieve: "0人 金诗萍（5.5）",
-                fund: "0",
-                highscore: "",
-              },
-              "24310(5.5分)": {
-                count: 4,
-                test: 0,
-                achieve: "0",
-                fund: "2人 李旭、殷家家",
-                highscore: "",
-              },
-              "24321(6分)": {
-                count: 6,
-                test: 2,
-                achieve: "0  何子杰（5.0）、张展诰（4.5）",
-                fund: "0",
-                highscore: "",
-              },
-              "24342(6.5分)": {
-                count: 4,
-                test: 2,
-                achieve: "1人  吴悠（7.5），高天成（5.5）",
-                fund: "1人 丁一帆",
-                highscore: "1人 吴悠（9/9/6.5/6 --> 7.5）",
-              },
-              "24285(6分)": {
-                count: 5,
-                test: 0,
-                achieve: "0",
-                fund: "0",
-                highscore: "",
-              },
-              "24378(6分)": {
-                count: 5,
-                test: 0,
-                achieve: "0",
-                fund: "0",
-                highscore: "",
-              },
-            };
-            return `<div class="item">
+    addTask(event) {
+      console.log("enter");
+      if (this.inputValue) {
+        this.renderValue.unshift({
+          value: this.inputValue,
+          createTime: moment().format("YYYY-MM-DD HH:MM"),
+          editing: false,
+          completed: false,
+        });
+        this.inputValue = "";
+      } else {
+        this.$message.error("请输入内容");
+      }
+    },
+    editTask(index) {
+      this.renderValue.splice(index, 1, {
+        ...this.renderValue[index],
+        editing: !this.renderValue[index].editing,
+      });
+    },
+    onblur(index) {
+      console.log("object");
+      this.renderValue.splice(index, 1, {
+        ...this.renderValue[index],
+        editing: false,
+        value: this.renderValue[index].value,
+      });
+    },
+    deleteTask(index) {
+      this.renderValue.splice(index, 1);
+      this.$message.success("删除成功");
+    },
+    deleteAllTask() {
+      this.renderValue = [];
+      this.$message.success("删除成功");
+    },
+  },
+  watch: {
+    renderValue: {
+      handler(n, o) {
+        localStorage.setItem("todoList", JSON.stringify(this.renderValue));
+      },
 
-
-            <div><span class="circle">◉</span><span>班级人数：${
-              memberMap[params[0].name]?.count
-            }</span> </div> \n
-            <div><span class="circle">◉</span><span>考试人数：${
-              memberMap[params[0].name]?.test
-            }</span> </div> \n
-            <div><span class="circle">◉</span><span>出分人数：${
-              memberMap[params[0].name]?.achieve
-            }</span> </div> \n
-            <div><span class="circle">◉</span><span>续费人数：${
-              memberMap[params[0].name]?.fund
-            }</span> </div> \n
-            <div><span class="circle">◉</span><span>高分人数：${
-              memberMap[params[0].name]?.highscore
-            }</span> </div> \n
-
-
-            </div>`;
-          },
-        },
-        toolbox: {
-          show: true,
-          feature: {
-            saveAsImage: {},
-          },
-        },
-        xAxis: {
-          type: "category",
-          //   boundaryGap: false,
-
-          // prettier-ignore
-          data: ['24225(6分)', '24201U(6.5分)', '24256(5.5分)', '24142(预备)', '24303(5.5-6精品)','24179U(6分)', '24310(5.5分)', '24321(6分)','24342(6.5分)', '24285(6分)','24378(6分)'],
-        },
-        yAxis: {
-          type: "value",
-          axisLabel: {
-            formatter: "{value} 人",
-          },
-          axisPointer: {
-            snap: true,
-          },
-        },
-        visualMap: {
-          show: false,
-          dimension: 0,
-          pieces: [
-            {
-              lte: 6,
-              color: "green",
-            },
-            {
-              gt: 6,
-              lte: 8,
-              color: "red",
-            },
-            {
-              gt: 8,
-              lte: 14,
-              color: "green",
-            },
-            {
-              gt: 14,
-              lte: 17,
-              color: "red",
-            },
-            {
-              gt: 17,
-              color: "green",
-            },
-          ],
-        },
-
-        series: [
-          {
-            name: "人数",
-            type: "line",
-
-            smooth: true,
-            // prettier-ignore
-            data: [{value: 3}, {value: 6}, {value: 4}, {value: 7}, {value: 5}, {value: 4}, {value: 4}, {value: 6}, {value: 4}, {value: 5}, {value: 5}],
-            markArea: {
-              itemStyle: {
-                color: "rgba(255, 173, 177, 0.4)",
-              },
-              data: [
-                [
-                  {
-                    name: "Morning Peak",
-                    xAxis: "07:30",
-                  },
-                  {
-                    xAxis: "10:00",
-                  },
-                ],
-                [
-                  {
-                    name: "Evening Peak",
-                    xAxis: "17:30",
-                  },
-                  {
-                    xAxis: "21:15",
-                  },
-                ],
-              ],
-            },
-          },
-        ],
-      };
-      this.myChart.setOption(option);
+      deep: true,
     },
   },
   mounted() {
-    var dom = document.getElementById("container");
-    this.myChart = echarts.init(dom, null, {
-      renderer: "canvas",
-      useDirtyRect: false,
-    });
-    this.myChart.on("click", "series.line", function (params) {
-      console.log(params);
-    });
-
-    this.run(a);
+    const localStorageValue = localStorage.getItem("todoList");
+    this.renderValue = localStorageValue ? JSON.parse(localStorageValue) : [];
   },
 };
 </script>
 
 <style>
-#chart {
-  width: 100%;
-  padding: 10px;
-
-  /* height: 100vh; */
+.text {
+  font-size: 14px;
 }
+
+.item {
+  margin-bottom: 18px;
+}
+
+.clearfix:before,
+.clearfix:after {
+  display: table;
+  content: "";
+}
+.clearfix:after {
+  clear: both;
+}
+</style>
+
+<style lang="less" scoped>
 #container {
   /* width: 500px;
   height: 500px; */
   width: 100%;
-  height: 600px;
-}
-.circle {
-  color: green;
-  display: inline-block;
-  font-size: 16px;
-  text-align: center;
-  margin-right: 3px;
-}
-.item {
-  /* display: flex; */
-  flex-direction: column;
+  height: 100%;
+  display: flex;
   align-items: center;
   justify-content: center;
+}
+.box-card {
+  margin-top: 10px;
+  width: 60%;
+
+  .line {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-bottom: 15px;
+
+    border-bottom: 1px solid #ccc;
+
+    .text {
+      white-space: normal;
+      overflow-wrap: break-word;
+      width: 80%;
+    }
+    .task-completed {
+      text-decoration: line-through;
+      color: #ccc;
+    }
+  }
 }
 </style>

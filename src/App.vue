@@ -63,11 +63,12 @@
           <span slot="title">分组一</span>
           <el-menu-item index="7-1">剑桥雅思</el-menu-item>
           <el-menu-item index="7-2">开/结班测试题</el-menu-item>
+          <el-menu-item index="7-3">辅练资料...</el-menu-item>
         </el-menu-item-group>
       </el-submenu>
       <el-menu-item index="8">
-        <i class="el-icon-odometer"></i>
-        <span slot="title">chart</span>
+        <i class="el-icon-edit-outline"></i>
+        <span slot="title">Todo List</span>
       </el-menu-item>
     </el-menu>
 
@@ -128,6 +129,9 @@ export default {
           break;
         case "7-2":
           this.$router.push("./class-test");
+          break;
+        case "7-3":
+          this.$router.push("./ielts-assignment");
           break;
         case "8":
           this.$router.push("./chart");
