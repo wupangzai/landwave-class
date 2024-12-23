@@ -20,13 +20,13 @@
           </el-tag>
           <el-tag
             style="margin-left: 10px"
-            v-if="stu.studentClassPlace !== '半海人广'"
+            v-if="stu.studentClassPlace !== '半海人广旗舰'"
             type="danger"
             >{{ stu.studentClassPlace }}</el-tag
           >
           <el-tag
             style="margin-left: 10px"
-            v-if="stu.studentServePlace !== '半海人广'"
+            v-if="stu.studentServePlace !== '半海人广旗舰'"
             type="danger"
             >非本校区学生-{{ stu.studentServePlace }}</el-tag
           >
@@ -68,13 +68,13 @@
           </el-tag>
           <el-tag
             style="margin-left: 10px"
-            v-if="stu.studentClassPlace !== '半海人广'"
+            v-if="stu.studentClassPlace !== '半海人广旗舰'"
             type="danger"
             >{{ stu.studentClassPlace }}</el-tag
           >
           <el-tag
             style="margin-left: 10px"
-            v-if="stu.studentClassPlace !== '半海人广'"
+            v-if="stu.studentClassPlace !== '半海人广旗舰'"
             type="danger"
             >非本校区学生-{{ stu.studentServePlace }}</el-tag
           >
@@ -425,7 +425,7 @@ export default {
   methods: {
     async getDataBase() {
       const res = await instance.get(
-        "/myclass/json?parameters=%5B%7B%22type%22%3A%22category%22%2C%22value%22%3A%5B%22%E5%8D%8A%E6%B5%B7%E4%BA%BA%E5%B9%BF%22%5D%2C%22id%22%3A%22e7ab001d-adfb-44aa-7cd3-96ee5f8d0dc2%22%2C%22target%22%3A%5B%22variable%22%2C%5B%22template-tag%22%2C%22dept%22%5D%5D%7D%2C%7B%22type%22%3A%22date%2Fall-options%22%2C%22value%22%3A%22next1days%22%2C%22id%22%3A%22953e6c0e-7467-721c-8065-fa3451526c25%22%2C%22target%22%3A%5B%22dimension%22%2C%5B%22template-tag%22%2C%22date%22%5D%5D%7D%2C%7B%22type%22%3A%22category%22%2C%22value%22%3Anull%2C%22id%22%3A%22627547e3-e078-8cd7-1c44-0038eba685e3%22%2C%22target%22%3A%5B%22variable%22%2C%5B%22template-tag%22%2C%22stuName%22%5D%5D%7D%5D&format_rows=true"
+        "/myclass/json?parameters=%5B%7B%22type%22%3A%22category%22%2C%22value%22%3A%5B%22%E5%8D%8A%E6%B5%B7%E4%BA%BA%E5%B9%BF%E6%97%97%E8%88%B0%22%5D%2C%22id%22%3A%22e7ab001d-adfb-44aa-7cd3-96ee5f8d0dc2%22%2C%22target%22%3A%5B%22variable%22%2C%5B%22template-tag%22%2C%22dept%22%5D%5D%7D%2C%7B%22type%22%3A%22date%2Fall-options%22%2C%22value%22%3A%22next1days%22%2C%22id%22%3A%22953e6c0e-7467-721c-8065-fa3451526c25%22%2C%22target%22%3A%5B%22dimension%22%2C%5B%22template-tag%22%2C%22date%22%5D%5D%7D%2C%7B%22type%22%3A%22category%22%2C%22value%22%3Anull%2C%22id%22%3A%22627547e3-e078-8cd7-1c44-0038eba685e3%22%2C%22target%22%3A%5B%22variable%22%2C%5B%22template-tag%22%2C%22stuName%22%5D%5D%7D%5D"
       );
       this.metaBaseInput = JSON.stringify(res);
       this.$message.success("自动获取明日课表成功~");
@@ -456,7 +456,9 @@ export default {
 
       this.renderList = dataAfterSorted.map((item) => {
         return {
-          time: `${item.start.slice(-5)}-${item.end.slice(-5)}`,
+          time: `${moment(item.start).format("HH:mm")}-${moment(
+            item.end
+          ).format("HH:mm")}`,
           subject: item["课程"],
           stuOrClass: item["学生/班级"],
           teacher: item["教师"],
