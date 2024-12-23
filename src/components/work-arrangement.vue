@@ -132,7 +132,7 @@ export default {
           parameters: JSON.stringify([
             {
               type: "category",
-              value: ["半海人广"],
+              value: ["半海人广旗舰"],
               id: "e7ab001d-adfb-44aa-7cd3-96ee5f8d0dc2",
               target: ["variable", ["template-tag", "dept"]],
             },
