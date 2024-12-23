@@ -178,12 +178,15 @@ export default {
 
       this.renderList = dataAfterSorted.map((item) => {
         return {
-          time: `${item.start.slice(-5)}-${item.end.slice(-5)}`,
+          time: `${moment(item.start).format("HH:mm")}-${moment(
+            item.end
+          ).format("HH:mm")}`,
           subject: item["课程"],
           stuOrClass: item["学生/班级"],
           teacher: item["教师"],
         };
       });
+      console.log(this.renderList);
     },
     async crmClickFn() {
       try {
@@ -211,9 +214,9 @@ export default {
               -8,
               -3
             )}-${crmDetail.end.slice(-8, -3)}`;
-            const metaBaseTime = `${item.start.slice(-5)}-${item.end.slice(
-              -5
-            )}`;
+            const metaBaseTime = `${moment(item.start).format(
+              "HH:mm"
+            )}-${moment(item.end).format("HH:mm")}`;
             if (
               crmDetail.object_name === item["学生/班级"] &&
               crmTime === metaBaseTime
@@ -225,7 +228,9 @@ export default {
             }
           });
           return {
-            time: `${item.start.slice(-5)}-${item.end.slice(-5)}`,
+            time: `${moment(item.start).format("HH:mm")}-${moment(
+              item.end
+            ).format("HH:mm")}`,
             subject: item["课程"],
             stuOrClass: item["学生/班级"],
             teacher: item["教师"],
@@ -339,13 +344,17 @@ export default {
           this.roomList.forEach((eItem, index) => {
             // VIP time name
             const isVIPRoom =
-              `${item.start.slice(-5)}-${item.end.slice(-5)}` ===
-                eItem["__EMPTY"] && item["学生/班级"] === eItem["__EMPTY_3"];
+              `${moment(item.start).format("HH:mm")}-${moment(item.end).format(
+                "HH:mm"
+              )}` === eItem["__EMPTY"] &&
+              item["学生/班级"] === eItem["__EMPTY_3"];
 
             // Class time name
             const isClassRoom =
-              `${item.start.slice(-5)}-${item.end.slice(-5)}` ===
-                eItem["__EMPTY_7"] && eItem["__EMPTY_10"] === item["学生/班级"];
+              `${moment(item.start).format("HH:mm")}-${moment(item.end).format(
+                "HH:mm"
+              )}` === eItem["__EMPTY_7"] &&
+              eItem["__EMPTY_10"] === item["学生/班级"];
             if (isVIPRoom) {
               classroom = eItem["半海人广校区教室占用表"];
             } else if (isClassRoom) {
@@ -356,7 +365,9 @@ export default {
             }
           });
           return {
-            time: `${item.start.slice(-5)}-${item.end.slice(-5)}`,
+            time: `${moment(item.start).format("HH:mm")}-${moment(
+              item.end
+            ).format("HH:mm")}`,
             subject: item["课程"],
             stuOrClass: item["学生/班级"],
             teacher: item["教师"],
@@ -411,7 +422,7 @@ export default {
   async created() {
     axios
       .get(
-        "/myclass/json?parameters=%5B%7B%22type%22%3A%22category%22%2C%22value%22%3A%5B%22%E5%8D%8A%E6%B5%B7%E4%BA%BA%E5%B9%BF%22%5D%2C%22id%22%3A%22e7ab001d-adfb-44aa-7cd3-96ee5f8d0dc2%22%2C%22target%22%3A%5B%22variable%22%2C%5B%22template-tag%22%2C%22dept%22%5D%5D%7D%2C%7B%22type%22%3A%22date%2Fall-options%22%2C%22value%22%3A%22next1days%22%2C%22id%22%3A%22953e6c0e-7467-721c-8065-fa3451526c25%22%2C%22target%22%3A%5B%22dimension%22%2C%5B%22template-tag%22%2C%22date%22%5D%5D%7D%2C%7B%22type%22%3A%22category%22%2C%22value%22%3Anull%2C%22id%22%3A%22627547e3-e078-8cd7-1c44-0038eba685e3%22%2C%22target%22%3A%5B%22variable%22%2C%5B%22template-tag%22%2C%22stuName%22%5D%5D%7D%5D&format_rows=true"
+        "/myclass/json?parameters=%5B%7B%22type%22%3A%22category%22%2C%22value%22%3A%5B%22%E5%8D%8A%E6%B5%B7%E4%BA%BA%E5%B9%BF%E6%97%97%E8%88%B0%22%5D%2C%22id%22%3A%22e7ab001d-adfb-44aa-7cd3-96ee5f8d0dc2%22%2C%22target%22%3A%5B%22variable%22%2C%5B%22template-tag%22%2C%22dept%22%5D%5D%7D%2C%7B%22type%22%3A%22date%2Fall-options%22%2C%22value%22%3A%22next1days%22%2C%22id%22%3A%22953e6c0e-7467-721c-8065-fa3451526c25%22%2C%22target%22%3A%5B%22dimension%22%2C%5B%22template-tag%22%2C%22date%22%5D%5D%7D%2C%7B%22type%22%3A%22category%22%2C%22value%22%3Anull%2C%22id%22%3A%22627547e3-e078-8cd7-1c44-0038eba685e3%22%2C%22target%22%3A%5B%22variable%22%2C%5B%22template-tag%22%2C%22stuName%22%5D%5D%7D%5D"
       )
       .then((response) => {
         this.metaBaseInput = JSON.stringify(response.data);
